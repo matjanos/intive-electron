@@ -14,7 +14,7 @@ import { greet } from "./hello_world/hello_world";
 import env from "env";
 
 const app = remote.app;
-const basePath = 'txt';
+const basePath = 'txt/';
 const appDir = jetpack.cwd(app.getAppPath());
 const appDirRoot = jetpack.cwd(basePath);
 
@@ -31,20 +31,25 @@ const osMap = {
 const refreshFilesList = ()=>{
   var foldersList = ""
   appDirRoot.find('.',{matching:['*']}).forEach(x=>{
-    var info = jetpack.inspect(`${basePath}/${x}`);
-    foldersList = foldersList.concat(`<span class="file-item">${x} <span class="file-size">${info.size} bytes</span></span>`);
+    var info = jetpack.inspect(`${basePath}${x}`);
+    foldersList = foldersList.concat(`<span class="file-item"><a class="file-name" href="#" data-file-name="${x}">${x}</a><span class="file-size">${info.size} bytes</span></span>`);
   });
   
   document.querySelector("#files").innerHTML = foldersList;
+
+  document.querySelectorAll(".file-name").forEach(x=>x.addEventListener('click',(event)=>{
+    var f_content = jetpack.read(basePath + event.srcElement.getAttribute("data-file-name"));
+    document.querySelector("#file-content").innerHTML = f_content;
+  }));
 }
 refreshFilesList();
 setInterval(()=>{
   refreshFilesList();
 },2000);
 
-
 document.querySelector("#app").style.display = "block";
 document.querySelector("#greet").innerHTML = greet();
 document.querySelector("#os").innerHTML = osMap[process.platform];
 document.querySelector("#env").innerHTML = env.name;
+document.querySelector("#author").innerHTML = manifest.author;
 document.querySelector("#electron-version").innerHTML = process.versions.electron;
