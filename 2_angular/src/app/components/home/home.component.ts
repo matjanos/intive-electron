@@ -4,6 +4,7 @@ import { Observable, Subject, BehaviorSubject, Subscriber, Subscription } from '
 import { ElectronService } from '../../providers/electron.service';
 import { timeInterval } from 'rxjs/operators';
 import { timeout } from 'rxjs/operator/timeout';
+import { availableNames } from './names'
 
 @Component({
   selector: 'app-home',
@@ -12,22 +13,23 @@ import { timeout } from 'rxjs/operator/timeout';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private _electronService: ElectronService,private changeDetector:ChangeDetectorRef ) { }
+  constructor(private _electronService: ElectronService, private changeDetector: ChangeDetectorRef) { }
 
   public newMessage: string = null;
+
 
   public messages: Subject<Message[]>;
   private me: string;
 
   ngOnInit() {
-    this.me = "Kuba";
+    var randName = Math.floor((Math.random() * availableNames.length));
+    this.me = availableNames[randName];
     this.messages = new BehaviorSubject([]);
-    this._electronService.subscribeToIpcMsg('chat-msg-rcv', (sender, msg:Message) => {
+    this._electronService.subscribeToIpcMsg('chat-msg-rcv', (sender, msg: Message) => {
       this.messages.take(1).subscribe(current => {
-        msg.author = "pong";
         current.push(msg);
         this.messages.next(current);
-        setInterval(()=>this.changeDetector.detectChanges(),200);
+        setInterval(() => this.changeDetector.detectChanges(), 200);
       });
     });
   }
@@ -38,24 +40,21 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  addClient(){
+  addClient() {
     this._electronService.sendIpcMsg('create-new-window');
   }
 
   sendMessage() {
+    if (this.newMessage == null || this.newMessage.trim().length == 0) {
+      return;
+    }
+
     var msg: Message = {
       author: this.me,
       text: this.newMessage,
       time: new Date
     };
     this._electronService.sendIpcMsg('chat-msg', msg);
-
-    this.messages.take(1).subscribe(current => {
-      current.push(msg);
-      this.messages.next(current);
-    })
-
     this.newMessage = null;
   }
-
 }

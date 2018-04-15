@@ -2,6 +2,8 @@ import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import { forEach } from '@angular/router/src/utils/collection';
+import * as notifier from 'node-notifier';
+
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -18,18 +20,20 @@ try {
 function subscribeToEvents() {
   ipcMain.on('chat-msg', (event, arg) => {
     windows.forEach(x => {
-      console.log(x);
       x.webContents.send('chat-msg-rcv', arg[0]);
     });
   });
 
   ipcMain.on('create-new-window', (event, arg) => {
     createWindow();
+    notifier.notify({
+      title: 'My notification',
+      message: 'test'
+    });
   });
 }
 
 function createWindow() {
-
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
