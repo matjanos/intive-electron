@@ -4,7 +4,6 @@ import * as url from 'url';
 import { forEach } from '@angular/router/src/utils/collection';
 import * as notifier from 'node-notifier';
 
-
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
@@ -19,17 +18,23 @@ try {
 
 function subscribeToEvents() {
   ipcMain.on('chat-msg', (event, arg) => {
+
+    let msg = arg[0];
+
+    notifier.notify({
+      title: `Message from ${msg.author}`,
+      message: msg.text,
+      icon: 'favicon.png',
+      sound: true
+    });
+
     windows.forEach(x => {
-      x.webContents.send('chat-msg-rcv', arg[0]);
+      x.webContents.send('chat-msg-rcv', msg);
     });
   });
 
   ipcMain.on('create-new-window', (event, arg) => {
     createWindow();
-    notifier.notify({
-      title: 'My notification',
-      message: 'test'
-    });
   });
 }
 
