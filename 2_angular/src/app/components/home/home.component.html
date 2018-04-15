@@ -1,3 +1,6 @@
+<div class="add-client">
+  <a href="#" (click)="addClient()">+</a>
+</div>
 <div class="container">
   <div class="chat">
     <div class="chat-title">
@@ -7,7 +10,7 @@
     <div class="messages">
       <div class="messages-content">
         <div class="message message-personal" [ngClass]="{'message-personal': msg.author==me}" *ngFor="let msg of messages | async">
-          {{msg.text}}
+          <span title="{{msg.author}}">{{msg.text}}</span>
           <div class="timestamp">{{msg.time | date:'HH:mm'}}</div>
         </div>
 

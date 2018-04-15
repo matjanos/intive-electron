@@ -313,3 +313,16 @@ Bounce
     transform: translateY(-10px);
   }
 }
+
+
+.add-client{
+  font-size: 100px;
+  text-align: right;
+  font-weight: 100;
+  font-family: initial;
+  margin-right: 5%;
+}
+.add-client > a{
+  color: #ff9a3b;
+  text-decoration: none;
+}

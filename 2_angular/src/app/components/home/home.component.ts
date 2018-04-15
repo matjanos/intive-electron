@@ -38,6 +38,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  addClient(){
+    this._electronService.sendIpcMsg('create-new-window');
+  }
+
   sendMessage() {
     var msg: Message = {
       author: this.me,
@@ -52,7 +56,6 @@ export class HomeComponent implements OnInit {
     })
 
     this.newMessage = null;
-
   }
 
 }
