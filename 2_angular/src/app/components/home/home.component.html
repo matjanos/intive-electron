@@ -6,7 +6,7 @@
     </div>
     <div class="messages">
       <div class="messages-content">
-        <div class="message message-personal" ng-class="" *ngFor="let msg of messages | async" >
+        <div class="message message-personal" [ngClass]="{'message-personal': msg.author==me}" *ngFor="let msg of messages | async">
           {{msg.text}}
           <div class="timestamp">{{msg.time | date:'HH:mm'}}</div>
         </div>

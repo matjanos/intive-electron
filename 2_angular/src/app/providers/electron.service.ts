@@ -23,4 +23,16 @@ export class ElectronService {
     return window && window.process && window.process.type;
   }
 
+  sendIpcMsg(topic: string, ...args) {
+    if (!this.isElectron()) {
+      console.warn('Can\'t send message since it\'s not Electron app')
+      return;
+    }
+
+    this.ipcRenderer.send(topic, args);
+  }
+
+  subscribeToIpcMsg(topic: string, callback: (sender:any, msg: any) => void) {
+    var a = this.ipcRenderer.on(topic, callback);
+  }
 }

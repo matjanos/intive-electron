@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -17,6 +17,11 @@ function createWindow() {
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
+  ipcMain.on('chat-msg', (event, arg) => {
+    console.log(arg);
+    event.sender.send('chat-msg-rcv',arg[0]);
+  });
+
   // Create the browser window.
   win = new BrowserWindow({
     x: 0,
@@ -27,7 +32,8 @@ function createWindow() {
 
   if (serve) {
     require('electron-reload')(__dirname, {
-     electron: require(`${__dirname}/node_modules/electron`)});
+      electron: require(`${__dirname}/node_modules/electron`)
+    });
     win.loadURL('http://localhost:4200');
   } else {
     win.loadURL(url.format({
