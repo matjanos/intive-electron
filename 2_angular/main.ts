@@ -1,10 +1,13 @@
 import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import { forEach } from '@angular/router/src/utils/collection';
 
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
+
+let windows: BrowserWindow[] = [];
 
 try {
   require('dotenv').config();
@@ -12,22 +15,30 @@ try {
   console.log('asar');
 }
 
+function subscribeToEvents() {
+  ipcMain.on('chat-msg', (event, arg) => {
+    windows.forEach(x => {
+      console.log(x);
+      x.webContents.send('chat-msg-rcv', arg[0]);
+    });
+  });
+
+  ipcMain.on('create-new-window', (event, arg) => {
+    createWindow();
+  });
+}
+
 function createWindow() {
 
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
-
-  ipcMain.on('chat-msg', (event, arg) => {
-    console.log(arg);
-    event.sender.send('chat-msg-rcv',arg[0]);
-  });
 
   // Create the browser window.
   win = new BrowserWindow({
     x: 0,
     y: 0,
     width: size.width,
-    height: size.height
+    height: size.height,
   });
 
   if (serve) {
@@ -52,6 +63,7 @@ function createWindow() {
     // when you should delete the corresponding element.
     win = null;
   });
+  windows.push(win);
 }
 
 try {
@@ -59,7 +71,10 @@ try {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
-  app.on('ready', createWindow);
+  app.on('ready', () => {
+    createWindow();
+    subscribeToEvents();
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {

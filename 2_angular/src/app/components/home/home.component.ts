@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Message } from './models/message';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscriber, Subscription } from 'rxjs';
 import { ElectronService } from '../../providers/electron.service';
+import { timeInterval } from 'rxjs/operators';
+import { timeout } from 'rxjs/operator/timeout';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +12,7 @@ import { ElectronService } from '../../providers/electron.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private _electronService: ElectronService) { }
+  constructor(private _electronService: ElectronService,private changeDetector:ChangeDetectorRef ) { }
 
   public newMessage: string = null;
 
@@ -25,7 +27,8 @@ export class HomeComponent implements OnInit {
         msg.author = "pong";
         current.push(msg);
         this.messages.next(current);
-      })
+        setInterval(()=>this.changeDetector.detectChanges(),200);
+      });
     });
   }
 
