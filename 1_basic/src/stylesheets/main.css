@@ -22,16 +22,17 @@ a {
 .container {
   text-align: center;
 }
-#files>.file-item{
+.list-item{
   display: block;
   padding: 5px;
   border: 1px solid #c4c4c4;
   border-bottom: 0px; 
 }
 
-#files>.file-item:last-child{  
+.list>.list-item:last-child{  
   border-bottom:  1px solid #c4c4c4;
 }
+
 .file-size {
   font-size: 70%;
   font-weight: 100;

@@ -30,6 +30,7 @@
     "release": "npm test && webpack --config=build/webpack.app.config.js --env=production && electron-builder"
   },
   "dependencies": {
+    "electron-printer": "0.0.5",
     "fs-jetpack": "^1.0.0"
   },
   "devDependencies": {

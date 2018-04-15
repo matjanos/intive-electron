@@ -28,28 +28,29 @@ const osMap = {
   linux: "Linux"
 };
 
-const refreshFilesList = ()=>{
+const refreshFilesList = () => {
   var foldersList = ""
-  appDirRoot.find('.',{matching:['*']}).forEach(x=>{
+  appDirRoot.find('.', { matching: ['*'] }).forEach(x => {
     var info = jetpack.inspect(`${basePath}${x}`);
-    foldersList = foldersList.concat(`<span class="file-item"><a class="file-name" href="#" data-file-name="${x}">${x}</a><span class="file-size">${info.size} bytes</span></span>`);
+    foldersList = foldersList.concat(`<span class="list-item"><a class="file-name" href="#" data-file-name="${x}">${x}</a><span class="file-size">${info.size} bytes</span></span>`);
   });
-  
+
   document.querySelector("#files").innerHTML = foldersList;
 
-  document.querySelectorAll(".file-name").forEach(x=>x.addEventListener('click',(event)=>{
+  document.querySelectorAll(".file-name").forEach(x => x.addEventListener('click', (event) => {
     var f_content = jetpack.read(basePath + event.srcElement.getAttribute("data-file-name"));
     document.querySelector("#file-content").innerHTML = f_content;
   }));
 }
 refreshFilesList();
-setInterval(()=>{
+/*setInterval(() => {
   refreshFilesList();
-},2000);
-
+}, 2000);
+*/
 document.querySelector("#app").style.display = "block";
 document.querySelector("#greet").innerHTML = greet();
 document.querySelector("#os").innerHTML = osMap[process.platform];
 document.querySelector("#env").innerHTML = env.name;
 document.querySelector("#author").innerHTML = manifest.author;
 document.querySelector("#electron-version").innerHTML = process.versions.electron;
+document.querySelector("#printers").innerHTML = remote.getCurrentWebContents().getPrinters().map(x => `<span class="list-item">${x.name}</span>`).join(' '); 
