@@ -43,10 +43,10 @@ const refreshFilesList = () => {
   }));
 }
 refreshFilesList();
-/*setInterval(() => {
+setInterval(() => {
   refreshFilesList();
 }, 2000);
-*/
+
 document.querySelector("#app").style.display = "block";
 document.querySelector("#greet").innerHTML = greet();
 document.querySelector("#os").innerHTML = osMap[process.platform];
