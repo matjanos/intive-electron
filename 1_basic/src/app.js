@@ -42,7 +42,7 @@ const refreshFilesList = () => {
     document.querySelector("#file-content").innerHTML = f_content;
   }));
 }
-refreshFilesList();
+
 setInterval(() => {
   refreshFilesList();
 }, 2000);
@@ -54,3 +54,5 @@ document.querySelector("#env").innerHTML = env.name;
 document.querySelector("#author").innerHTML = manifest.author;
 document.querySelector("#electron-version").innerHTML = process.versions.electron;
 document.querySelector("#printers").innerHTML = remote.getCurrentWebContents().getPrinters().map(x => `<span class="list-item">${x.name}</span>`).join(' '); 
+
+refreshFilesList();
